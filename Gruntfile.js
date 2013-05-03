@@ -38,7 +38,7 @@ module.exports = function(grunt) {
           saveTo: '/'
         },
         files: {
-          folder: './test/knox_test.gzip'
+          folder: 'test/folder/**/*'
         },
       },
     },

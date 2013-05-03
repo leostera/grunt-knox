@@ -34,17 +34,17 @@ exports.deploy = {
   setUp: function(done) {
     done();
   },
-  checkFileIsThere: function(test) {
+  checkGZipIsThere: function(test) {
     test.expect(1);
 
-    fs.stat('./test/knox_test.gzip', function (err, stat) {
+    fs.stat('./test/folder/knox_test.gzip', function (err, stat) {
 
       if(err) {
-        grunt.log.writeln("File test/knox_test.gzip couldn't be stat'd: ", err);
+        grunt.log.writeln("File test/folder/knox_test.gzip couldn't be stat'd: ", err);
         test.done(false);
       }
 
-      s3client.get('knox_test.gzip').on('response', function(res){
+      s3client.get('folder/knox_test.gzip').on('response', function(res){
 
         grunt.log.writeln(res.statusCode);
         grunt.log.writeln(res.headers);
@@ -57,4 +57,27 @@ exports.deploy = {
 
     });
   },
+  checkIndexIsThere: function(test) {
+    test.expect(1);
+
+    fs.stat('./test/folder/index.html', function (err, stat) {
+
+      if(err) {
+        grunt.log.writeln("File test/folder/index.html couldn't be stat'd: ", err);
+        test.done(false);
+      }
+
+      s3client.get('folder/index.html').on('response', function(res){
+
+        grunt.log.writeln(res.statusCode);
+        grunt.log.writeln(res.headers);
+        res.on('data', function(chunk){
+          test.equal(chunk.length, stat.size)
+          test.done();
+        });
+
+      }).end();
+
+    });
+  }
 };

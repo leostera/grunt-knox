@@ -1,7 +1,7 @@
 {
   "name": "grunt-knox",
   "description": "Knox Tasks for GruntJS",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/leostera/grunt-knox",
   "author": {
     "name": "Leandro Ostera",
@@ -29,7 +29,9 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "knox": "~0.7.1"
+    "knox": "~0.7.1",
+    "async": "~0.2.8",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.1.1",
