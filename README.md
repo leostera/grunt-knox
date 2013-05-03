@@ -32,7 +32,7 @@ grunt.initConfig({
       saveTo: '/'
     },
     files: {
-      folder: './test/knox_test.gzip'
+      folder: 'dist/**/*'
     },
   },
   //...
@@ -44,6 +44,3 @@ Define your options in the config, set the files.folder to your compressed file 
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
