@@ -115,6 +115,8 @@ module.exports = function(grunt) {
           });
   
           // CALL PARALLEL FUNCTIONS
+          grunt.log.writeln("This could take a while...");
+          grunt.log.writeln("(But as long as no error message appears it'll be fine)");
           async.parallel(parallel_calls, function (err, res) {
             grunt.verbose.write("");
             _.forEach(res, function (r) {
