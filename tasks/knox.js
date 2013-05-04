@@ -8,7 +8,7 @@
 
 'use strict';
 
-var knox  = require('knox')
+var knox  = require('intimidate')
   , async = require('async')
   , _     = require('underscore')
   , fs    = require('fs');
@@ -26,10 +26,12 @@ module.exports = function(grunt) {
 
     grunt.verbose.writeflags(options, 'Options');
 
-    var s3client = knox.createClient({
+    var s3client = new knox({
         key: options.key
       , secret: options.secret
       , bucket: options.bucket
+      , maxRetries: options.maxRetries || 4
+      , backoffInterval: options.backoffInterval || 51
     });
 
     // Upload Logic.
@@ -81,16 +83,13 @@ module.exports = function(grunt) {
 
                 // PUT into S3 Bucket
                 grunt.verbose.write("");
-                grunt.verbose.write("PUSH file", file);
-                var req = s3client.put(file.path, {
-                    'Content-Length': file.size
-                  , 'Content-Type': 'text/plain'
-                });
+                grunt.verbose.write("PUT file", file);
+                s3client.upload(file.name, file.path, function (err, res) {
+                  if(err) {
+                    grunt.verbose.error(err);
+                    return cb(false, null);
+                  }
 
-                fs.createReadStream(file.name).pipe(req);
-
-                // RETURN result object
-                req.on('response', function (res) {
                   res = _.pick(res, "complete", "headers", "statusCode")
                   res.file = file.path;
                   var res_bool = null;
