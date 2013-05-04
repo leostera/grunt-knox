@@ -95,10 +95,7 @@ module.exports = function(grunt) {
                   var res_bool = null;
 
                   if(res.statusCode == 200) {
-                    if(res.complete === false)
-                      res.message = "Match!";
-                    else
-                      res.message = "Success!";
+                    res.message = "Success!";
                   } else {
                     res_bool = false;
                     res.error = "HTTP Error: "+res.statusCode;
