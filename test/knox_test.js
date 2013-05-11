@@ -24,27 +24,46 @@ var grunt = require('grunt');
 
 var knox = require('knox')
   , fs   = require('fs')
-  , s3client = knox.createClient({
-      key: "AKIAIKT3SJJUCJPOFCOQ",
-      secret: "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",
-      bucket: "grunt-knox"
-    });
+  , s3client = knox.createClient(require("./auth"));
 
 exports.deploy = {
   setUp: function(done) {
     done();
   },
-  checkGZipIsThere: function(test) {
+  supportsSpacesInFilename: function(test) {
     test.expect(1);
 
-    fs.stat('./test/folder/knox_test.gzip', function (err, stat) {
+    fs.stat('./test/fixtures/File name.txt', function (err, stat) {
 
       if(err) {
-        grunt.log.writeln("File test/folder/knox_test.gzip couldn't be stat'd: ", err);
+        grunt.log.writeln("File test/fixtures/File name.txt couldn't be stat'd: ", err);
         test.done(false);
       }
 
-      s3client.get('folder/knox_test.gzip').on('response', function(res){
+      s3client.get('fixtures/File%20name.txt').on('response', function(res){
+
+        grunt.log.writeln(res.statusCode);
+        grunt.log.writeln(res.headers);
+        res.on('data', function(chunk){
+          test.equal(chunk.length, stat.size)
+          test.done();
+        });
+
+      }).end();
+
+    });
+  },
+  checkGZipIsThere: function(test) {
+    test.expect(1);
+
+    fs.stat('./test/fixtures/knox_test.gzip', function (err, stat) {
+
+      if(err) {
+        grunt.log.writeln("File test/fixtures/knox_test.gzip couldn't be stat'd: ", err);
+        test.done(false);
+      }
+
+      s3client.get('fixtures/knox_test.gzip').on('response', function(res){
 
         grunt.log.writeln(res.statusCode);
         grunt.log.writeln(res.headers);
@@ -60,14 +79,14 @@ exports.deploy = {
   checkIndexIsThere: function(test) {
     test.expect(1);
 
-    fs.stat('./test/folder/index.html', function (err, stat) {
+    fs.stat('./test/fixtures/index.html', function (err, stat) {
 
       if(err) {
-        grunt.log.writeln("File test/folder/index.html couldn't be stat'd: ", err);
+        grunt.log.writeln("File test/fixtures/index.html couldn't be stat'd: ", err);
         test.done(false);
       }
 
-      s3client.get('folder/index.html').on('response', function(res){
+      s3client.get('fixtures/index.html').on('response', function(res){
 
         grunt.log.writeln(res.statusCode);
         grunt.log.writeln(res.headers);
